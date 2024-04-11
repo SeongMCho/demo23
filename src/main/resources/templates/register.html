@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>등록 페이지</h2>
+원래 등록페이지는 특별히 받을 파라미터값이 없으나<br>
+그냥 받아봄<br>
+이름 : [[${name}]]
+나이 <span th:text="${age}">나이는 얼마인고?</span>
+
+    <form action="/register" method="post">
+        이름 : <input name="name" th:value="${name}">
+        나이 : <input name="age" th:value="${age}">
+        <input type="submit" value="전송">
+    </form>
+
+
+
+</body>
+
+
+
+
+</html>

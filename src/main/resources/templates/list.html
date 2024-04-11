@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>리스트 페이지</h2>
+    <a th:href="@{/register(name=홍길동, age=400)}">이동 th</a>
+    <a href="/register?name='홍길동'&age=400">이동 일반</a>
+
+
+    <ul>
+        <li  th:each="a, status : ${list}">
+            [[${status.odd ? "홀수": "짝수"}]]
+        </li>
+    </ul>
+
+
+
+    [[${name}]]
+<hr>
+<h2 th:text="${name}">신짱구</h2>
+
+<ul>
+    <li th:each="str : ${list}">
+        <a th:href="@{/read(name=홍길동, age=400)}"> [[${str.title}]]</a>
+        [[${str.content}]] [[${str.writer}]]
+    </li>
+</ul>
+
+
+</body>
+</html>

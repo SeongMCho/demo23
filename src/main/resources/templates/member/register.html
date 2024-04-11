@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<h2>등록 페이지</h2>
+원래 등록페이지는 특별히 받을 파라미터값이 없으나<br>
+그냥 받아봄<br>
+이름 : [[${name}]]
+나이 <span th:text="${age}">나이는 얼마인고?</span>
+
+<div class="container mt-3">
+    <h2>Stacked form</h2>
+    <form action="/member/register" method="post">
+        <div class="mb-3 mt-3">
+            <label for="email">아이디:</label>
+            <input type="text" class="form-control" id="email" placeholder="Enter email" name="name">
+        </div>
+        <div class="mb-3">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pass">
+        </div>
+        <div class="mb-3">
+            <label for="pwd">이름:</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="userId">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+
+
+
+
+
+</body>
+
+
+
+
+</html>

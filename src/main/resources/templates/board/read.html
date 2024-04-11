@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+</head>
+<body>
+
+
+<div class="container mt-3">
+    <h2>읽기</h2>
+    <form action="/board/register" method="post">
+        <div class="mb-3 mt-3">
+            <label for="bno">글번호:</label>
+            <input type="text" class="form-control" th:value="${dto.bno}" id="bno" name="bno" readonly>
+        </div>
+
+
+        <div class="mb-3 mt-3">
+            <label for="title">제목:</label>
+            <input type="text" class="form-control" th:value="${dto.title}" id="title"  name="title" readonly>
+        </div>
+
+        <div class="mb-3 mt-3">
+            <label for="content">내용:</label>
+            <textarea class="form-control" rows="5" id="content"  name="content" readonly>[[${dto.content}]]</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="writer">작성자:</label>
+            <input type="text" class="form-control" id="writer" th:value="${dto.writer}"  name="writer" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="regDate">등록일자:</label>
+            <input type="text" class="form-control" id="regDate" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}"  name="regDate" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="modDate">수정일자:</label>
+            <input type="text" class="form-control" id="modDate" th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}"
+                   name="modDate" readonly>
+        </div>
+
+        <div th:with="link = ${pageRequestDTO.getLink()}">
+            <a th:href="|@{/board/list}?${link}|">
+                <button type="button" class="btn btn-primary">List</button>
+            </a>
+            <a th:href="|@{/board/modify(bno=${dto.bno})}&${link}|">
+                <button type="button" class="btn btn-info">Modify</button>
+            </a>
+        </div>
+
+
+    </form>
+</div>
+
+
+
+<div class="row">
+<div class="col-lg-6">
+<div class="chat-panel panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-comments fa-fw"></i> Chat
+        <div class="btn-group pull-right">
+
+            <button type="button" id="addReplyBtn" class="btn btn-outline btn-primary btn-sm"  >
+              new register
+            </button>
+
+        </div>
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <ul class="chat">
+            <li class="right clearfix">
+
+                <div class="chat-body clearfix" style="margin-right: 0px;">
+                    <div class="header">
+                        <strong class="primary-font">신짱구</strong>
+                        <small class="pull-right text-muted">
+                            <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
+                        </small>
+                    </div>
+                    <p>
+                        댓글 내용
+                    </p>
+                </div>
+            </li>
+
+        </ul>
+
+
+
+
+
+        <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
+            <ul class="pagination">
+
+
+
+                <li class="paginate_button " aria-controls="dataTables-example">
+                    <a href="#">
+                        1
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+    <!-- /.panel-body -->
+    <div class="panel-footer">
+        <div class="input-group">
+            <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here...">
+            <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat">
+                                        Send
+                                    </button>
+                                </span>
+        </div>
+    </div>
+    <!-- /.panel-footer -->
+</div>
+</div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group has-success">
+                        <label class="control-label" for="replyText">댓글내용</label>
+                        <input type="text" class="form-control replyText"  id="replyText" name="replyText">
+                    </div>
+                    <div class="form-group has-warning">
+                        <label class="control-label" for="replyer">댓글 작성자</label>
+                        <input type="text" class="form-control replyer" id="replyer" name="replyer">
+                    </div>
+
+                    <div class="form-group has-warning">
+                        <label class="control-label" for="regDate1">Reply Date</label>
+                        <input type="text" class="form-control replyer" id="regDate1" name="regDate1" value="">
+                    </div>
+
+
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modalModBtn">Modify</button>
+                <button type="button" class="btn btn-primary" id="modalRemoveBtn">Remove</button>
+                <button type="button" class="btn btn-primary" id="modalRegisterBtn">Save changes</button>
+                <button type="button" class="btn btn-default" id="modalCloseBtn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript" src="/js/reply.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function() {
+        var bnoValue = [[${dto.bno}]];
+        //var replyUL = document.querySelector(".chat");
+        var replyUL = $(".chat");
+        var pagination = $(".pagination");
+        var page = 1;
+
+
+        pagination.on("click", "a", function (e) {
+            // var $this = $(this);
+            e.preventDefault();
+            //var $a = $(".char");
+            //a.html();
+            //  --a.innerHTML
+            var pageNum = $(this).data("page") || $(this).text();
+
+            console.log(pageNum);
+            //var pageNum = $this.data("page") || $this.text();
+            showList(pageNum);
+            // console.log(e.target);
+            //
+            // e.preventDefault();
+            // console.log( $(this).text());
+            //
+            // page = $(this).text();
+            //
+            // if(page == 'Previous' ){
+            //    page  = $(this).data("page");
+            //     console.log("page :" + page);
+            //
+            // }else if (page == 'Next' ){
+            //     page  = $(this).data("page");
+            //     console.log("page :" + page);
+            //
+            // }
+            // showList(page);
+
+        });
+
+
+
+        //console.log(replyUL);
+        showList(page); // 기능은 전체 데이터를 가져오는 함수 (페이지번호);
+
+        function showList(page) {
+
+            //console.log("쇼올에 들어온 페이지" + page);
+
+            replyService.getList({ bno : bnoValue , page : page || 0} ,
+                    function (pageResponseDTO){
+                        //console.log("pageResponseDTO 값" + pageResponseDTO.dtoList[0].replyText);
+                        //console.log("pageResponseDTO page" + pageResponseDTO.page);
+                        //console.log("pageResponseDTO total" + pageResponseDTO.total);
+                        //값을 받은거 가지고 출력까지 해보자
+
+                        if(pageResponseDTO.page == -1){
+                            pageNum = Math.ceil(pageResponseDTO.total / 10.0);
+                            showList(pageNum);
+                            return;
+                        }
+
+                        let page = pageResponseDTO.page;
+                        let dtoList = pageResponseDTO.dtoList;
+                        let str = "";   //이거는 화면에 출력해줄 내용을 담는 용도ex "<input>"
+
+                        if(dtoList == null || dtoList.length ==0){
+                            return;
+                        }
+
+                        for(let i =0, len = dtoList.length || 0; i < len; i++ ){
+                            str += '<li class="right clearfix" data-rno="';
+                            str +=  dtoList[i].rno;
+                            str += '"><div class="chat-body clearfix" style="margin-right: 0px;"><div class="header"><strong class="primary-font">';
+                            str +=   dtoList[i].replyer;
+                            str +=  '</strong><small class="pull-right text-muted"><i class="fa fa-clock-o fa-fw"></i>';
+                            str +=  "12시간전";
+                            str +=  '</small></div><p>';
+                            str +=  dtoList[i].replyText;
+                            str +=  '</p></div></li>';
+                        }
+                        replyUL.html(str);
+                        //replyUL.append(str);
+                        //replyUL.innerHTML += str;
+
+                        console.log(pageResponseDTO.next);
+                        console.log(pageResponseDTO.prev);
+
+                        let str1 = "";
+
+                        if(pageResponseDTO.prev){
+                            str1 += '<li class="paginate_button previous"><a href="#" data-page="' + (+pageResponseDTO.start -1) + '">Previous</a></li>';
+                        }
+
+                        for (let i = pageResponseDTO.start, j = pageResponseDTO.end; i <= j; i++){
+                           //str1 += '<li class="paginate_button active"><a href="#!">';
+                           str1 += '<li class="paginate_button' + ((pageResponseDTO.page==i)? " active" : "") +'"><a href="#!">';
+                           str1 += i;
+                           str1 += '</a></li>';
+                        }
+
+
+                        if ( pageResponseDTO.next ){
+                            str1 += '<li class="paginate_button next"><a href="#" data-page="' + (+pageResponseDTO.end +1) + '">Next</a></li>';
+                        }
+
+                        pagination.html(str1);
+
+                    }
+            );
+
+        };
+
+        var modal = $(".modal");  //모달 클래스를 선택
+        //console.log(modal);
+        var modalInputReplyText = modal.find("input[name='replyText']");
+        var modalInputReplyer = modal.find("input[name='replyer']");
+        var modalInputRegDate = modal.find("input[name='regDate1']");
+
+        var modalModBtn = $("#modalModBtn");
+        var modalRemoveBtn = $("#modalRemoveBtn");
+        var modalRegisterBtn = $("#modalRegisterBtn");
+        var modalCloseBtn = $("#modalCloseBtn");
+        var modalEventHandler = {
+            addReply : function (e) {  //댓글등록버튼을 눌렀을때
+                modal.modal("show");
+                console.log("하이모달",modal); // 콘솔2개
+
+                modal.find("input").val("");  // input태그를 찾아서 벨류를 ""로만든다
+                modalInputRegDate.closest("div").hide(); // 날짜 넣는 태그 를 숨긴다
+                modalRemoveBtn.hide();  //지움버튼 숨김
+                modalModBtn.hide();     //수정버튼 숨김
+                modalRegisterBtn.show();
+            },
+
+            modReply : function (e) {
+                modal.modal("show");
+                let rno = $(this).data("rno");
+                console.log("클릭한 내용의 rno"+rno);
+                //필요한 파라미터값 : rno callback error
+                replyService.get(rno, function (data){
+
+                    modalInputReplyText.val(data.replyText);
+                    modalInputReplyer.val(data.replyer);
+                    modal.data("rno", data.rno);
+
+                    //버튼 등록:저장, 취소  읽기 는 수정 삭제 취소
+
+                    modal.find("button[id !='modalCloseBtn']").hide();
+                    modalModBtn.show();
+                    modalRemoveBtn.show();
+
+                });
+            }
+        }
+
+        $("#addReplyBtn").on("click", modalEventHandler.addReply);
+
+        $("#modalRegisterBtn").on("click", function (e) {  //댓글등록버튼을 눌렀을때
+            console.log("하이");
+
+            //reply를 객체 형태로 만듬
+            var reply = {
+                page : page,
+                replyText : modalInputReplyText.val(),      //인풋태그에 쓴 내용
+                replyer : modalInputReplyer.val(),
+                bno : bnoValue                              //처음에 지정한 bno
+            };
+
+            replyService.add(reply, function (result) {     //reply.js add를 사용
+                modal.find("input").val("");        //인풋창에 모든 값 제거
+                //modal.modal("hide");
+                showList(1);
+                //modalCloseBtn.trigger("click");     // 종료버튼 강제 실행
+                modal.modal("hide");
+
+            });
+        });
+
+        $(".chat").on("click", "li", modalEventHandler.modReply);
+
+        modalModBtn.on("click", function (e) {
+           let reply = {
+                bno : bnoValue,
+                rno : modal.data("rno"),
+                replyText: modalInputReplyText.val(),
+                replyer : modalInputReplyer.val()
+
+           };
+           
+           replyService.update(reply, function (result) {
+
+               alert(result.rno);
+               showList(1);
+               modal.modal("hide");
+           });
+           
+        });
+
+        modalRemoveBtn.on("click", function (e) {
+            //보내는 값rno 가지고 서버들어가서 삭제 그리고 반환값
+
+            let rno = modal.data("rno");  //data-rno를 말함
+
+            replyService.remove(rno, function (delResult) {
+               alert("삭제됨" + delResult.rno);
+               showList(1);
+               modal.modal("hide");
+            });
+
+        });
+
+    });
+
+
+</script>
+
+
+<script th:inline="javascript">
+    const errors = [[${errors}]];
+    console.log(errors);
+
+    let errorMsg = '';
+
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`;
+        }
+        alert(errorMsg);
+    }
+
+</script>
+
+
+<!-- jQuery -->
+<script src="/vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="/vendor/metisMenu/metisMenu.min.js"></script>
+
+
+
+<!-- Custom Theme JavaScript -->
+<script src="/dist/js/sb-admin-2.js"></script>
+
+
+</body>
+</html>
