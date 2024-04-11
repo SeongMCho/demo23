@@ -46,8 +46,8 @@ public class BoardController {
         Date date=new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         String now=sdf.format(date);
-
-        String path=uploadpath + "\\" +now; //경로
+        //String absolutePath = new File("").getAbsolutePath() + "\\";
+        String path= uploadpath + "\\" +now; //경로
         File file = new File(path);
         System.out.println(file);
         if(file.exists()==false) {//파일이 존재하면 true
@@ -188,6 +188,7 @@ public class BoardController {
 
         String filepath = makeDir();
         //브라우저별로 경로가 포함되서 올라오는 경우가 있기에 간단한 처리.
+        System.out.println("경로 : " + filepath);
 
         String uuid = UUID.randomUUID().toString();
 
